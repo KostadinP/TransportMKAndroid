@@ -8,7 +8,6 @@ import android.os.Build;
 import android.util.Log;
 
 import com.example.transportmk.transportmk.model.Line;
-import com.example.transportmk.transportmk.model.Schedule;
 import com.example.transportmk.transportmk.model.Station;
 import com.example.transportmk.transportmk.model.Station$Table;
 import com.google.gson.Gson;
@@ -175,15 +174,17 @@ public class FetchDataService extends IntentService {
         String jsonStr = null;
 
         try {
-            // Construct the URL for the OpenWeatherMap query
-            // Possible parameters are available at OWM's forecast API page, at
-            // http://openweathermap.org/API#forecast
+            // Construct the URL
             URL url = new URL("https://transport-mk.herokuapp.com/data/rest/lines/schedulesByStations");
 
             Station from = new Select().from(Station.class).where(
                     Condition.column(Station$Table.STATIONNAME).eq(param1)).querySingle();
             Station to = new Select().from(Station.class).where(
                     Condition.column(Station$Table.STATIONNAME).eq(param2)).querySingle();
+            if (from == null || to == null) {
+                return;
+            }
+
             String urlParameters = "startStationId=" + from.getId() + "&endStationId=" + to.getId();
             byte[] postData = urlParameters.getBytes(StandardCharsets.UTF_8);
             int postDataLength = postData.length;
@@ -245,8 +246,10 @@ public class FetchDataService extends IntentService {
     private void parseLineJson(String jsonStr) {
         Gson gson = new Gson();
         Line line = gson.fromJson(jsonStr, Line.class);
-        for (Schedule sc : line.getScheduleList()) {
-            Log.v("TAG", sc.getId() + " " + sc.getDepartureTime());
-        }
+
+        Intent i = new Intent(this, ListActivity.class);
+        i.putExtra(Intent.EXTRA_TEXT, line.getScheduleList());
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(i);
     }
 }

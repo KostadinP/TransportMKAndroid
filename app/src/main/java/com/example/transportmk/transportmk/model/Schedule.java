@@ -1,9 +1,11 @@
 package com.example.transportmk.transportmk.model;
 
+import java.io.Serializable;
+
 /**
  * Created by Kosta on 01-Sep-15.
  */
-public class Schedule {
+public class Schedule implements Serializable {
 
     private long id;
 

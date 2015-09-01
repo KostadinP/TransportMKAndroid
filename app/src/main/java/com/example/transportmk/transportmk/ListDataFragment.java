@@ -1,7 +1,9 @@
 package com.example.transportmk.transportmk;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -10,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import com.example.transportmk.transportmk.model.Schedule;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -52,6 +56,13 @@ public class ListDataFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
+        Intent i = getActivity().getIntent();
+        if (i != null && i.hasExtra(Intent.EXTRA_TEXT)) {
+            Schedule[] schedule = (Schedule[]) i.getSerializableExtra(Intent.EXTRA_TEXT);
+            for (Schedule sc : schedule) {
+                Log.v("TAG", sc.getId() + " " + sc.getDepartureTime());
+            }
+        }
 
         String[] lista = {"Stavka1", "Stavka2", "Stavka3", "Stavka4"};
         ArrayList<String> list = new ArrayList<>(Arrays.asList(lista));

@@ -8,11 +8,11 @@
     <string name="form_title">Внесете ја почетната и крајната станица:</string>
     <string name="hint_from">Од</string>
     <string name="hint_to">До</string>
-
     <string name="transportType1">Сеедно</string>
     <string name="transportType2">Автобус</string>
     <string name="transportType3">Воз</string>
     <string name="transportType">Изберете тип на превоз...</string>
     <string name="form_button">Пребарувај</string>
+    <string name="title_activity_list">ListActivity</string>
 
 </resources>
