@@ -1,88 +1,81 @@
 package com.example.transportmk.transportmk;
 
+import android.annotation.TargetApi;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 
+import com.example.transportmk.transportmk.adapters.StationAdapter;
+import com.example.transportmk.transportmk.model.Line;
+import com.example.transportmk.transportmk.model.Schedule;
 import com.example.transportmk.transportmk.model.Station;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.raizlabs.android.dbflow.sql.language.Select;
 
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 
-/**
- * Created by Kosta on 30-Aug-15.
- */
-public class ListDataFragment extends Fragment {
 
-    public ArrayAdapter<String> mAdapter;
+public class FormFragment extends Fragment {
 
-    public ListDataFragment() {
+    AutoCompleteTextView tbFrom;
+    AutoCompleteTextView tbTo;
+    List<Station> mList;
+    StationAdapter adapter;
+
+    public FormFragment() {
+        // Required empty public constructor
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        setHasOptionsMenu(true);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.list_data, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.action_refresh) {
-            new FetchStationsTask().execute();
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+        // Inflate the layout for this fragment
+        View rootView = inflater.inflate(R.layout.fragment_form, container, false);
 
+        Button button = (Button) rootView.findViewById(R.id.btnGetLine);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.v("TAG", "do something on btn click");
+                new FetchLineTask().execute();
+            }
+        });
 
-        String[] lista = {"Stavka1", "Stavka2", "Stavka3", "Stavka4"};
-        ArrayList<String> list = new ArrayList<>(Arrays.asList(lista));
-
-        mAdapter = new ArrayAdapter<String>(getActivity(), R.layout.list_item, R.id.tv_field, list);
-
-        ListView listView = (ListView) rootView.findViewById(R.id.lv_data);
-        listView.setAdapter(mAdapter);
-
+        mList = new Select().from(Station.class).queryList();
+        tbFrom = (AutoCompleteTextView) rootView.findViewById(R.id.tbFrom);
+        tbTo = (AutoCompleteTextView) rootView.findViewById(R.id.tbTo);
+        adapter = new StationAdapter(getActivity(), R.layout.fragment_form, R.id.lbl_stationName, mList);
+        tbFrom.setAdapter(adapter);
+        tbTo.setAdapter(adapter);
 
         return rootView;
     }
 
-    public class FetchStationsTask extends AsyncTask<Void, Void, Void> {
+    public class FetchLineTask extends AsyncTask<Void, Void, Void> {
 
-        public final String LOG_TAG = FetchStationsTask.class.getSimpleName();
+        public final String LOG_TAG = FetchLineTask.class.getSimpleName();
 
+        @TargetApi(Build.VERSION_CODES.KITKAT)
         protected Void doInBackground(Void... params) {
             // These two need to be declared outside the try/catch
 // so that they can be closed in the finally block.
@@ -90,17 +83,28 @@ public class ListDataFragment extends Fragment {
             BufferedReader reader = null;
 
 // Will contain the raw JSON response as a string.
-            String forecastJsonStr;
+            String jsonStr = null;
 
             try {
                 // Construct the URL for the OpenWeatherMap query
                 // Possible parameters are available at OWM's forecast API page, at
                 // http://openweathermap.org/API#forecast
-                URL url = new URL("https://transport-mk.herokuapp.com/data/rest/stations");
+                URL url = new URL("https://transport-mk.herokuapp.com/data/rest/lines/schedulesByStations");
+
+                String urlParameters = "startStationId=2&endStationId=12";
+                byte[] postData = urlParameters.getBytes(StandardCharsets.UTF_8);
+                int postDataLength = postData.length;
 
                 // Create the request to OpenWeatherMap, and open the connection
                 urlConnection = (HttpURLConnection) url.openConnection();
-                urlConnection.setRequestMethod("GET");
+                urlConnection.setRequestMethod("POST");
+                urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+                urlConnection.setRequestProperty("charset", "utf-8");
+                urlConnection.setRequestProperty("Content-Length", Integer.toString(postDataLength));
+                urlConnection.setUseCaches(false);
+                try (DataOutputStream wr = new DataOutputStream(urlConnection.getOutputStream())) {
+                    wr.write(postData);
+                }
                 urlConnection.connect();
 
                 // Read the input stream into a String
@@ -124,9 +128,9 @@ public class ListDataFragment extends Fragment {
                     // Stream was empty.  No point in parsing.
                     return null;
                 }
-                forecastJsonStr = buffer.toString();
-                Log.v(LOG_TAG, forecastJsonStr);
-                parseJson(forecastJsonStr);
+                jsonStr = buffer.toString();
+                Log.v(LOG_TAG, jsonStr);
+                parseJson(jsonStr);
 
 
             } catch (IOException e) {
@@ -150,17 +154,11 @@ public class ListDataFragment extends Fragment {
         }
 
         private void parseJson(String jsonStr) {
-            Gson gson = new GsonBuilder()
-                    .excludeFieldsWithoutExposeAnnotation()
-                    .create();
-            Station[] stations = gson.fromJson(jsonStr, Station[].class);
-            for (Station s : stations) {
-                if (s.exists()) {
-                    //Delete.table(Station.class);
-                    s.update();
-                } else s.save();
+            Gson gson = new Gson();
+            Line line = gson.fromJson(jsonStr, Line.class);
+            for (Schedule sc : line.getScheduleList()) {
+                Log.v("TAG", sc.getId() + " " + sc.getDepartureTime());
             }
-            Log.v(LOG_TAG, new Select().from(Station.class).where().limit(10).queryList().toString());
         }
     }
 }

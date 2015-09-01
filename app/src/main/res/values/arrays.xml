@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="transportTypeList">
+        <item>@string/transportType1</item>
+        <item>@string/transportType2</item>
+        <item>@string/transportType3</item>
+    </string-array>
+</resources>
