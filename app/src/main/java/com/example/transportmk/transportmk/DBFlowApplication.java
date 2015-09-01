@@ -13,5 +13,7 @@ public class DBFlowApplication extends Application {
     public void onCreate() {
         super.onCreate();
         FlowManager.init(this);
+
+        FetchDataService.startActionFetchStations(this);
     }
 }
