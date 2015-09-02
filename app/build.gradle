@@ -7,7 +7,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.transportmk.transportmk"
-        minSdkVersion 11
+        minSdkVersion 14
         targetSdkVersion 21
         versionCode 1
         versionName "1.0"
@@ -29,4 +29,7 @@ dependencies {
     apt 'com.raizlabs.android:DBFlow-Compiler:2.2.1'
     compile "com.raizlabs.android:DBFlow-Core:2.2.1"
     compile "com.raizlabs.android:DBFlow:2.2.1"
+
+    //Picasso
+    compile 'com.squareup.picasso:picasso:2.5.2'
 }
