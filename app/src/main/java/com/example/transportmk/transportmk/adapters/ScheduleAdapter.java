@@ -62,8 +62,8 @@ public class ScheduleAdapter extends ArrayAdapter<Schedule> {
                     .load(R.drawable.train_1c144d_50)
                     .into(viewHolder.imageView);
         }
-        viewHolder.depatureTime.setText(schedule.getDepartureTime());
-        viewHolder.arrivalTime.setText(schedule.getArrivalTime());
+        viewHolder.depatureTime.setText(schedule.getDepartureTime().substring(0, 5));
+        viewHolder.arrivalTime.setText(schedule.getArrivalTime().substring(0, 5));
         viewHolder.regularityType.setText(schedule.getRegularityType());
         // Return the completed view to render on screen
         return convertView;

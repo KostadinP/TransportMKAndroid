@@ -16,6 +16,7 @@ import com.example.transportmk.transportmk.model.Schedule;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 /**
  * Created by Kosta on 30-Aug-15.
@@ -60,6 +61,7 @@ public class ListDataFragment extends Fragment {
             Schedule[] schedule = (Schedule[]) i.getSerializableExtra(Intent.EXTRA_TEXT);
 
             ArrayList<Schedule> list = new ArrayList<>(Arrays.asList(schedule));
+            Collections.sort(list, new ScheduleTimeComparator());
 
             mAdapter = new ScheduleAdapter(getActivity(), list);
             ListView listView = (ListView) rootView.findViewById(R.id.lv_data);
