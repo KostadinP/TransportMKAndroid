@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/list_selector"
@@ -11,24 +11,21 @@
         android:id="@+id/thumbnail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
         android:layout_marginEnd="5dip"
         android:background="@drawable/image_bg"
         android:padding="3dip">
 
         <ImageView
             android:id="@+id/list_image"
-            android:contentDescription="@string/description_vehicle_type"
             android:layout_width="50dip"
-            android:layout_height="50dip" />
+            android:layout_height="50dip"
+            android:contentDescription="@string/description_vehicle_type" />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/labels"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/thumbnail"
-        android:layout_toEndOf="@+id/thumbnail"
         android:layout_marginEnd="5dp"
         android:orientation="vertical">
 
@@ -36,9 +33,9 @@
             android:id="@+id/departure"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="end"
             android:text="@string/label_departure"
             android:textColor="#040404"
-            android:layout_gravity="end"
             android:textSize="15sp"
             android:textStyle="bold" />
 
@@ -57,8 +54,8 @@
             android:id="@+id/regularity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="1dip"
             android:layout_gravity="end"
+            android:layout_marginTop="1dip"
             android:text="@string/label_regularity"
             android:textColor="#040404"
             android:textSize="15sp"
@@ -68,8 +65,6 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toEndOf="@+id/labels"
-        android:layout_alignTop="@+id/labels"
         android:orientation="vertical">
         <!-- Departure Time-->
         <TextView
@@ -105,8 +100,6 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:contentDescription="@string/description_arrow"
-        android:layout_alignParentEnd="true"
-        android:layout_centerVertical="true" />
+        android:contentDescription="@string/description_arrow" />
 
-</RelativeLayout>
+</LinearLayout>
