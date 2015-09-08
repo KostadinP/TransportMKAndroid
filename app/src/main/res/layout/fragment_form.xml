@@ -30,17 +30,17 @@
         android:inputType="text" />
 
     <Spinner
-        android:id="@+id/TransportType"
+        android:id="@+id/transportType"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:entries="@array/transportTypeList"
-        android:prompt="@string/transportType"></Spinner>
+        android:prompt="@string/transportType"/>
 
     <Button
         android:id="@+id/btnGetLine"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/form_button"></Button>
+        android:text="@string/form_button"/>
 
 </LinearLayout>

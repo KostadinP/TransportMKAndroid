@@ -34,8 +34,9 @@ public class FetchDataService extends IntentService {
     private static final String ACTION_FETCH_STATIONS = "com.example.transportmk.transportmk.action.FOO";
     private static final String ACTION_FETCH_LINE = "com.example.transportmk.transportmk.action.BAZ";
 
-    private static final String EXTRA_FROMCITY = "com.example.transportmk.transportmk.extra.PARAM1";
-    private static final String EXTRA_TOCITY = "com.example.transportmk.transportmk.extra.PARAM2";
+    private static final String EXTRA_FROMCITY = "com.example.transportmk.extra.PARAM1";
+    private static final String EXTRA_TOCITY = "com.example.transportmk.extra.PARAM2";
+    private static final String EXTRA_VEHICLE = "com.example.transportmk.extra.PARAM3";
 
     public final String LOG_TAG = this.getClass().getSimpleName();
 
@@ -57,11 +58,12 @@ public class FetchDataService extends IntentService {
      *
      * @see IntentService
      */
-    public static void startActionFetchLine(Context context, String param1, String param2) {
+    public static void startActionFetchLine(Context context, String param1, String param2, String param3) {
         Intent intent = new Intent(context, FetchDataService.class);
         intent.setAction(ACTION_FETCH_LINE);
         intent.putExtra(EXTRA_FROMCITY, param1);
         intent.putExtra(EXTRA_TOCITY, param2);
+        intent.putExtra(EXTRA_VEHICLE, param3);
         context.startService(intent);
     }
 
@@ -78,7 +80,8 @@ public class FetchDataService extends IntentService {
             } else if (ACTION_FETCH_LINE.equals(action)) {
                 final String param1 = intent.getStringExtra(EXTRA_FROMCITY);
                 final String param2 = intent.getStringExtra(EXTRA_TOCITY);
-                handleActionBaz(param1, param2);
+                final String param3 = intent.getStringExtra(EXTRA_VEHICLE);
+                handleActionBaz(param1, param2, param3);
             }
         }
     }
@@ -163,7 +166,7 @@ public class FetchDataService extends IntentService {
      * parameters.
      */
     @TargetApi(Build.VERSION_CODES.KITKAT)
-    private void handleActionBaz(String param1, String param2) {
+    private void handleActionBaz(String param1, String param2, String param3) {
         // These two need to be declared outside the try/catch
 // so that they can be closed in the finally block.
         HttpURLConnection urlConnection = null;
@@ -175,6 +178,13 @@ public class FetchDataService extends IntentService {
         try {
             // Construct the URL
             URL url = new URL("https://transport-mk.herokuapp.com/data/rest/lines/schedulesByStations");
+            if (param3.equals("Автобус")){
+                url = new URL("https://transport-mk.herokuapp.com/data/rest/lines/schedulesByStations/type/BUS");
+            }
+            else if (param3.equals("Воз")){
+                url = new URL("https://transport-mk.herokuapp.com/data/rest/lines/schedulesByStations/type/TRAIN");
+            }
+            Log.d(LOG_TAG, param3);
 
             Station from = new Select().from(Station.class).where(
                     Condition.column(Station$Table.STATIONNAME).eq(param1)).querySingle();

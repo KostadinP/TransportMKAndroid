@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.Spinner;
 
 import com.example.transportmk.transportmk.adapters.StationAdapter;
 import com.example.transportmk.transportmk.model.Station;
@@ -19,6 +20,7 @@ public class FormFragment extends Fragment {
 
     AutoCompleteTextView tbFrom;
     AutoCompleteTextView tbTo;
+    Spinner spTransportType;
     List<Station> mList;
     StationAdapter adapter;
 
@@ -40,6 +42,7 @@ public class FormFragment extends Fragment {
         mList = new Select().from(Station.class).queryList();
         tbFrom = (AutoCompleteTextView) rootView.findViewById(R.id.tbFrom);
         tbTo = (AutoCompleteTextView) rootView.findViewById(R.id.tbTo);
+        spTransportType = (Spinner) rootView.findViewById(R.id.transportType);
         adapter = new StationAdapter(getActivity(), R.layout.fragment_form, R.id.lbl_stationName, mList);
         tbFrom.setAdapter(adapter);
         tbTo.setAdapter(adapter);
@@ -48,7 +51,10 @@ public class FormFragment extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FetchDataService.startActionFetchLine(getActivity(), tbFrom.getText().toString(), tbTo.getText().toString());
+                FetchDataService.startActionFetchLine(getActivity(),
+                        tbFrom.getText().toString(),
+                        tbTo.getText().toString(),
+                        spTransportType.getSelectedItem().toString());
             }
         });
 
