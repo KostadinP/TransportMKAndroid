@@ -38,12 +38,13 @@
             android:layout_height="wrap_content"
             android:text="@string/label_departure"
             android:textColor="#040404"
+            android:layout_gravity="end"
             android:textSize="15sp"
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/arrival"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="1dip"
             android:gravity="end"
@@ -57,7 +58,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="1dip"
-            android:gravity="end"
+            android:layout_gravity="end"
             android:text="@string/label_regularity"
             android:textColor="#040404"
             android:textSize="15sp"

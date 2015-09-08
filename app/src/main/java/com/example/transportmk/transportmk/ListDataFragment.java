@@ -15,7 +15,6 @@ import com.example.transportmk.transportmk.adapters.ScheduleAdapter;
 import com.example.transportmk.transportmk.model.Schedule;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 
 /**
@@ -58,9 +57,13 @@ public class ListDataFragment extends Fragment {
 
         Intent i = getActivity().getIntent();
         if (i != null && i.hasExtra(Intent.EXTRA_TEXT)) {
-            Schedule[] schedule = (Schedule[]) i.getSerializableExtra(Intent.EXTRA_TEXT);
+            Object[] schedule = (Object[]) i.getSerializableExtra(Intent.EXTRA_TEXT);
 
-            ArrayList<Schedule> list = new ArrayList<>(Arrays.asList(schedule));
+            ArrayList<Schedule> list = new ArrayList<>();
+            for (Object sc : schedule) {
+                list.add((Schedule) sc);
+            }
+
             Collections.sort(list, new ScheduleTimeComparator());
 
             mAdapter = new ScheduleAdapter(getActivity(), list);

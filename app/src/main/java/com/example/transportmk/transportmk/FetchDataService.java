@@ -22,7 +22,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
@@ -186,7 +185,7 @@ public class FetchDataService extends IntentService {
             }
 
             String urlParameters = "startStationId=" + from.getId() + "&endStationId=" + to.getId();
-            byte[] postData = urlParameters.getBytes(StandardCharsets.UTF_8);
+            byte[] postData = urlParameters.getBytes("UTF-8");
             int postDataLength = postData.length;
 
             // Create the request to OpenWeatherMap, and open the connection

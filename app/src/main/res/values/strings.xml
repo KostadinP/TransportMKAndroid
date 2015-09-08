@@ -14,10 +14,10 @@
     <string name="transportType">Изберете тип на превоз...</string>
     <string name="form_button">Пребарувај</string>
     <string name="title_activity_list">ListActivity</string>
-    <string name="label_departure">Departure:</string>
-    <string name="label_arrival">Arrival:</string>
+    <string name="label_departure">Тргнува во:</string>
+    <string name="label_arrival">Пристигнува во:</string>
     <string name="description_vehicle_type">Vehicle Type</string>
     <string name="description_arrow">Arrow</string>
-    <string name="label_regularity">Regularity:</string>
+    <string name="label_regularity">Редовност:</string>
 
 </resources>
